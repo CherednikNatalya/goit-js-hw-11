@@ -2,6 +2,6 @@ export {refs};
 
 refs = {
    form : document.querySelector('#search-form'),
-   loadMoreBtn : document.querySelector('.load-more'),
+  loadMoreBtn  : document.querySelector('.load-more'),
 }
 
