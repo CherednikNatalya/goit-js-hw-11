@@ -17,9 +17,9 @@ const BASE_URL = 'https://pixabay.com/api';
     }
     return response.json();
   })
-  .then(({ articles }) => {
-    this.incrementPage();
-    return articles;
+  .then(data => {
+    console.log(data);
+    this.page +=1
   });
 }
 
