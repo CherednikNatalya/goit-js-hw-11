@@ -19,6 +19,8 @@ const BASE_URL = 'https://pixabay.com/api';
   })
   .then(data => {
     this.incrementPage() 
+    
+    return data.photo
   });
 }
 

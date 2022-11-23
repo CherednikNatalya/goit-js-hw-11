@@ -10,11 +10,12 @@ const newsApiService = new NewsApiService();
 
 function onSearch(e) {
   e.preventDefault();
-  newsApiService.query = e.currentTarget.elements.query.value;
-  newsApiService.fetchPhoto()
+  newsApiService.query = e.currentTarget.elements.query.value.trim();
+  newsApiService.resetPage()
+  newsApiService.fetchPhoto().then(photo => console.log(photo))
 }
 
 function onloadMore (e) {
-  newsApiService.fetchPhoto();
+  newsApiService.fetchPhoto().then(photo => console.log(photo));
 }
 
