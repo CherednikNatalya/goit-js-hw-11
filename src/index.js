@@ -10,12 +10,44 @@ const newsApiService = new NewsApiService();
 
 function onSearch(e) {
   e.preventDefault();
-  newsApiService.query = e.currentTarget.elements.query.value.trim();
+
+  newsApiService.query = e.currentTarget.elements.searchQuery.value.trim();
   newsApiService.resetPage()
-  newsApiService.fetchPhoto().then(photo => console.log(photo))
+  newsApiService.fetchPhoto().then(data => {
+      console.log("🚀 ~ data", data);
+      return data;
+  })
+
+
+//   newsApiService.query = e.currentTarget.elements.searchQuery.value;
+//   newsApiService.resetPage()
+//   newsApiService.fetchPhoto().then(data => {
+//     console.log("🚀 ~ data", data);
+//     return data;
+// })
 }
 
 function onloadMore (e) {
-  newsApiService.fetchPhoto().then(photo => console.log(photo));
+  newsApiService.fetchPhoto().then(photo => 
+    console.log("🚀 ~ photo", photo));
 }
 
+
+
+
+
+// function onSearch(e) {
+//   e.preventDefault();
+//   newsApiService.query = e.currentTarget.searchQuery.value.trim();
+//   newsApiService.resetPage()
+//   newsApiService.fetchPhoto().then(data => {
+//       console.log("🚀 ~ data", data);
+//       return data;
+//   })
+// }
+
+// function onloadMore (e) {
+//   newsApiService.fetchPhoto().then(photo => 
+//     console.log("🚀 ~ photo", photo)
+//   );
+// }
