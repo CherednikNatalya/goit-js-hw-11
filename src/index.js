@@ -30,7 +30,7 @@ function onSearch(e) {
 
 function onloadMore (e) {
   newsApiService.fetchPhoto().then(markupCreate);
-  refs.loadMoreBtn.classList.toggle("hidden");
+  refs.loadMoreBtn.classList.add("is-hidden");
 }
 
 function markupCreate(hits) {

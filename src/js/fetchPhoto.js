@@ -9,7 +9,7 @@ export default class NewsApiService {
 const API_KEY = '31541189-0a437f1c4a0bdb60103b05fd6'
 const BASE_URL = 'https://pixabay.com/api';
   return fetch(
-    `${BASE_URL}/?key=${API_KEY}&q${this.searchQuery}&image_type=photo&safesearch=true&orientation=horizontal&per_page=40&page=${this.page}`
+    `${BASE_URL}/?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&safesearch=true&orientation=horizontal&per_page=40&page=${this.page}`
   )
   .then(response => {
     if (!response.ok) {
@@ -30,7 +30,7 @@ this.page += 1;
 
 resetPage() {
 this.page = 1;
-refs.loadMoreBtn.classList.toggle("hidden");
+// refs.loadMoreBtn.classList.toggle("hidden");
 }
 
 get query() {
@@ -65,36 +65,3 @@ set query(newQuery) {
 // }
 
 
-// function markupCreate(photos) {
-//   return refs.gallery.insertAdjacentHTML(
-//     'beforeend',
-//     photos.hits
-//       .map(
-//         ({
-//           webformatURL,
-//           largeImageURL,
-//           tags,
-//           likes,
-//           views,
-//           comments,
-//           downloads,
-//         }) => `<div class="photo-card">
-// <a class="photo-card__link" href="${largeImageURL}"><img class="photo-card__image" src="${webformatURL}" alt="${tags}" loading="lazy"/></a>
-//   <div class="info">
-//   <p class="info-item">
-//   <b>Likes: </b>${likes}
-//   </p>
-//   <p class="info-item">
-//   <b>Views: </b>${views}
-//   </p>
-//   <p class="info-item">
-//   <b>Comments: </b>${comments}
-//   </p>
-//   <p class="info-item">
-//   <b>Downloads: </b>${downloads}
-//   </p>
-//   </div>
-//   </div>`
-//       )
-//       .join('')
-//   
