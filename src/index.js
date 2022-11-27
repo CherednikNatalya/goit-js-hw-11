@@ -2,10 +2,8 @@
 import {ImagesApiService}   from './js/fetchPhoto'
 import { createMarkup } from "./js/markupCreate";
 import { refs } from './js/refs'
-
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-
 import Notiflix from 'notiflix';
 import axios from 'axios';
 
@@ -105,8 +103,7 @@ const options = {
     Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
  }
 function getScroll() {
-    const { height: cardHeight } = document
-        .querySelector(".gallery")
+    const { height: cardHeight } = document.querySelector(".gallery")
         .firstElementChild.getBoundingClientRect();
 
     window.scrollBy({
