@@ -1,9 +1,11 @@
-// import './css/styles.css';
-import ImagesApiService   from './js/fetchPhoto'
+
+import {ImagesApiService}   from './js/fetchPhoto'
 import { createMarkup } from "./js/markupCreate";
 import { refs } from './js/refs'
+
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+
 import Notiflix from 'notiflix';
 import axios from 'axios';
 
