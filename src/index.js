@@ -9,6 +9,7 @@ import axios from 'axios';
 
 
 let lightbox = new SimpleLightbox('.gallery a')
+
 const imagesAPI = new ImagesApiService();
  
 const options = {
@@ -53,7 +54,7 @@ const options = {
      evt.preventDefault();
      imagesAPI.resetPage();
      refs.gallery.innerHTML = '';
-     refs.btnMore.classList.add('is-hidden');
+     refs.loadMoreBtn.classList.add('is-hidden');
      const { elements: { searchQuery } } = evt.currentTarget;
 
      if (!searchQuery.value) {
@@ -95,7 +96,7 @@ const options = {
  function clearPage() {
   imagesAPI.resetPage();
   refs.list.innerHTML = '';
-  refs.btnMore.classList.add('is-hidden');
+  refs.loadMoreBtn.classList.add('is-hidden');
  }
 
  function renderMarkup(markup) {
