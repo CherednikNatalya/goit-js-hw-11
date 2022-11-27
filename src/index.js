@@ -1,107 +1,118 @@
-
-import NewsApiService  from './js/fetchPhoto'
+// import './css/styles.css';
+import ImagesApiService   from './js/fetchPhoto'
+import { createMarkup } from "./js/markupCreate";
 import { refs } from './js/refs'
 import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
+import axios from 'axios';
 
 
-refs.form.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onloadMore)
-
-
-const newsApiService = new NewsApiService();
-
-function onSearch(e) {
-  e.preventDefault();
-  
-  clearContainer()
-  newsApiService.query = e.currentTarget.elements.query.value.trim();
+let lightbox = new SimpleLightbox('.gallery a')
+const imagesAPI = new ImagesApiService();
  
-  if (newsApiService.query === '') {
-    return Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-  } else {
-    Notiflix.Notify.success(`Hooray! We found totalHits images.`);
-  }
+const options = {
+     root: null,
+     rootMargin: '100px',
+     threshold: 1.0
+ }
 
-  newsApiService.resetPage()
-  newsApiService.fetchPhoto().then(markupCreate);
-  refs.loadMoreBtn.classList.toggle("hidden");
+ const callback = async function(entries, observer) {
+     entries.forEach(async entry => {
+         if (entry.isIntersecting) {
+             imagesAPI.incrementPage()
+             observer.unobserve(entry.target);
+
+             try {
+                 const {hits} = await imagesAPI.getImages();
+                 const markup = createMarkup(hits);
+                 renderMarkup(markup);
+
+                 lightbox.refresh();
+
+                 if (!imagesAPI.isShowLoadMore) {
+                      
+                     Notify.info("We're sorry, but you've reached the end of search results.")
+                     return;
+                 }
+                 if (imagesAPI.isShowLoadMore) {
+                     const target = document.querySelector('.photo-card:last-child')
+                 Intersection.observe(target);
+                 }
+                
+             } catch (error) {
+                 onError(error)
+                 clearPage()
+             }
+         }
+     });
+ };
+ const Intersection = new IntersectionObserver(callback, options);
+
+ const onFormSubmit = async (evt) => {
+     evt.preventDefault();
+     imagesAPI.resetPage();
+     refs.gallery.innerHTML = '';
+     refs.btnMore.classList.add('is-hidden');
+     const { elements: { searchQuery } } = evt.currentTarget;
+
+     if (!searchQuery.value) {
+         Notify.info("You have not entered a query")
+         return;
+     }
+     imagesAPI.query = searchQuery.value.trim().replace(/ /ig, '+');
+
+     try {
+         const { hits, totalHits } = await imagesAPI.getImages();
+         if (!totalHits) {
+             Notify.failure("Sorry, there are no images matching your search query. Please try again.")
+             return;
+         }
+         const markup = createMarkup(hits);
+         renderMarkup(markup);
+         imagesAPI.calculateTotalPages(totalHits);
+         
+         Notify.success(`Hooray! We found ${totalHits} images.`);
+   if (imagesAPI.isShowLoadMore) {
+      const target = document.querySelector('.photo-card:last-child')
+         Intersection.observe(target);
+    }
+         
+
+
+          lightbox.refresh();
+
+         
+
+
+     } catch (error) {
+         onError(error)
+         clearPage()
+     }
+ }
+ refs.form.addEventListener('submit', onFormSubmit)
+
+ function clearPage() {
+  imagesAPI.resetPage();
+  refs.list.innerHTML = '';
+  refs.btnMore.classList.add('is-hidden');
+ }
+
+ function renderMarkup(markup) {
+     refs.gallery.insertAdjacentHTML('beforeend', markup)
+ }
+
+ function onError (error) {
+     console.log(error);
+     Notify.failure(`${error.message}`);
+ }
+function getScroll() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+    });
 }
-
-function onloadMore (e) {
-  newsApiService.fetchPhoto().then(markupCreate);
-  refs.loadMoreBtn.classList.add("is-hidden");
-}
-
-function markupCreate(hits) {
-    return refs.gallery.insertAdjacentHTML(
-      'beforeend',
-      hits.map(
-        ({
-          webformatURL,
-          largeImageURL,
-          tags,
-          likes,
-          views,
-          comments,
-          downloads,
-        }) => `<div class="photo-card">
-<a class="photo-card__link" href="${largeImageURL}">
-<img class="photo-card__image" src="${webformatURL}" alt="${tags}" loading="lazy"/>
-</a>
-  <div class="info">
-  <p class="info-item">
-  <b>Likes: </b>${likes}
-  </p>
-  <p class="info-item">
-  <b>Views: </b>${views}
-  </p>
-  <p class="info-item">
-  <b>Comments: </b>${comments}
-  </p>
-  <p class="info-item">
-  <b>Downloads: </b>${downloads}
-  </p>
-  </div>
-  </div>`
-      )
-      .join('')
-      );
-      }
-      
-
-function clearContainer() {
-  refs.gallery.innerHTML = '';
-}
-
-
-
-const lightbox = new SimpleLightbox('.gallery a', {
-	captionDelay: 250,
-    captionsData:'alt',
-});
-
-
-
-
-// const galleryContainer = document.querySelector('.gallery');
-// const galleryMarkup = createGalleryRef(galleryItems)
-
-// galleryContainer.insertAdjacentHTML("afterbegin", galleryMarkup);
-
-
-// function createGalleryRef(galleryItems) {
-//     return galleryItems.map(({preview, original, description}) => {
-//         return `<a class="gallery__item" href="${original}">
-//         <img 
-//         class="gallery__image" 
-//         src="${preview}" 
-//         alt="${description}" />
-//       </a>`
-
-// })
-// .join('');
-// }
-
-
-
