@@ -56,7 +56,9 @@ set query(newQuery) {
   }
 }
 
-
+// get isShowLoadMore() {
+//   return this.page < this.totalPages;
+// }
 
 
 
