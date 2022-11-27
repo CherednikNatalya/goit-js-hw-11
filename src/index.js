@@ -60,10 +60,11 @@ const options = {
      const { elements: { searchQuery } } = evt.currentTarget;
 
      if (!searchQuery.value) {
-         Notify.info("You have not entered a query")
+        Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+    
          return;
      }
-     imagesAPI.query = searchQuery.value.trim().replace(/ /ig, '+');
+     imagesAPI.query = searchQuery.value.trim();
 
      try {
          const { hits, totalHits } = await imagesAPI.getImages();
@@ -80,13 +81,8 @@ const options = {
       const target = document.querySelector('.photo-card:last-child')
          Intersection.observe(target);
     }
-         
-
 
           lightbox.refresh();
-
-         
-
 
      } catch (error) {
          onError(error)
@@ -97,7 +93,7 @@ const options = {
 
  function clearPage() {
   imagesAPI.resetPage();
-  refs.list.innerHTML = '';
+  refs.gallery.innerHTML = '';
   refs.loadMoreBtn.classList.add('is-hidden');
  }
 
@@ -105,9 +101,8 @@ const options = {
      refs.gallery.insertAdjacentHTML('beforeend', markup)
  }
 
- function onError (error) {
-     console.log(error);
-     Notify.failure(`${error.message}`);
+  function onError (error) {
+    Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
  }
 function getScroll() {
     const { height: cardHeight } = document
