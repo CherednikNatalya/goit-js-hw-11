@@ -1,15 +1,13 @@
 
-import {ImagesApiService}   from './js/fetchPhoto'
-import { createMarkup } from "./js/markupCreate";
-import { refs } from './js/refs'
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-import Notiflix from 'notiflix';
-import axios from 'axios';
+ import { Notify } from 'notiflix/build/notiflix-notify-aio';
+ import SimpleLightbox from "simplelightbox";
+ import "simplelightbox/dist/simple-lightbox.min.css";
 
+ import { ImagesApiService } from "./js/fetchPhoto";
+ import { createMarkup } from "./js/markupCreate";
+ import { refs } from "./js/refs";
 
-let lightbox = new SimpleLightbox('.gallery a')
-
+ let lightbox = new SimpleLightbox('.gallery a')
 const imagesAPI = new ImagesApiService();
  
 const options = {
@@ -31,16 +29,14 @@ const options = {
 
                  lightbox.refresh();
 
-                 if (!imagesAPI.isShowLoadMore) {
-                      
+                 if (!imagesAPI.isShowLoadMore) {                   
                      Notify.info("We're sorry, but you've reached the end of search results.")
                      return;
                  }
                  if (imagesAPI.isShowLoadMore) {
                      const target = document.querySelector('.photo-card:last-child')
                  Intersection.observe(target);
-                 }
-                
+                 }              
              } catch (error) {
                  onError(error)
                  clearPage()
@@ -54,15 +50,14 @@ const options = {
      evt.preventDefault();
      imagesAPI.resetPage();
      refs.gallery.innerHTML = '';
-     refs.loadMoreBtn.classList.add('is-hidden');
+     refs.btnMore.classList.add('is-hidden');
      const { elements: { searchQuery } } = evt.currentTarget;
 
      if (!searchQuery.value) {
-        Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
-    
+         Notify.info("You have not entered a query")
          return;
      }
-     imagesAPI.query = searchQuery.value.trim();
+     imagesAPI.query = searchQuery.value.trim().replace(/ /ig, '+');
 
      try {
          const { hits, totalHits } = await imagesAPI.getImages();
@@ -91,19 +86,21 @@ const options = {
 
  function clearPage() {
   imagesAPI.resetPage();
-  refs.gallery.innerHTML = '';
-  refs.loadMoreBtn.classList.add('is-hidden');
+  refs.list.innerHTML = '';
+  refs.btnMore.classList.add('is-hidden');
  }
 
  function renderMarkup(markup) {
      refs.gallery.insertAdjacentHTML('beforeend', markup)
  }
 
-  function onError (error) {
-    Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.')
+ function onError (error) {
+     console.log(error);
+     Notify.failure(`${error.message}`);
  }
 function getScroll() {
-    const { height: cardHeight } = document.querySelector(".gallery")
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
         .firstElementChild.getBoundingClientRect();
 
     window.scrollBy({
