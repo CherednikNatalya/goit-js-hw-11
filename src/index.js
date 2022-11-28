@@ -30,7 +30,7 @@ const options = {
                  lightbox.refresh();
 
                  if (!imagesAPI.isShowLoadMore) {                   
-                     Notify.info("We're sorry, but you've reached the end of search results.")
+                    Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
                      return;
                  }
                  if (imagesAPI.isShowLoadMore) {
@@ -54,7 +54,7 @@ const options = {
      const { elements: { searchQuery } } = evt.currentTarget;
 
      if (!searchQuery.value) {
-         Notify.info("You have not entered a query")
+         Notify.failure("Sorry, there are no images matching your search query. Please try again.")
          return;
      }
      imagesAPI.query = searchQuery.value.trim().replace(/ /ig, '+');
